@@ -12,33 +12,17 @@ def shiftChr(x,key,modifier=1):
 
     shifted = ord(x)
     shifted -= offset
-    print("(%d - %d)mod 26 = "%(shifted,-1*keyOffset),end='')
+    # print("(%d - %d)mod 26 = "%(shifted,-1*keyOffset),end='')
     shifted += keyOffset
-    print("(%d)mod 26 = "%(shifted),end='')
+    # print("(%d)mod 26 = "%(shifted),end='')
     shifted %= 26
-    print("%d = "%(shifted),end='')
+    # print("%d = "%(shifted),end='')
     shifted += offset
-    print(chr(shifted))
+    # print(chr(shifted))
     # shifted = ((ord(x)-offset)+keyOffset)%26 + offset
     return chr(shifted)
 
-# def encrypt(pt,key): #Vigneere
-#     ptLen = len(pt)
-#     keyLen = len(key)
-#     keyIndex = 0
-#     ct = ""
-#     for ptIndex in range(ptLen):
-#         if(pt[ptIndex]==" "):
-#             ct+=" "
-#             continue
-#         ct += shiftChr(pt[ptIndex],key[keyIndex])
-#         keyIndex += 1
-#         if(keyIndex >= keyLen):
-#             keyIndex = 0
-#     return ct
-
-def encrypt(pt:str,iKey:str): #Autokey
-    key = iKey
+def encrypt(pt,key): #Vigneere
     ptLen = len(pt)
     keyLen = len(key)
     keyIndex = 0
@@ -47,16 +31,14 @@ def encrypt(pt:str,iKey:str): #Autokey
         if(pt[ptIndex]==" "):
             ct+=" "
             continue
-        if(keyIndex == keyLen):
-            key = pt.replace(' ','')
-            keyIndex=0
-            keyLen=-1
         ct += shiftChr(pt[ptIndex],key[keyIndex])
         keyIndex += 1
+        if(keyIndex >= keyLen):
+            keyIndex = 0
     return ct
 
+
 def decrypt(ct,key):
-    plusKey = ''
     ctLen = len(ct)
     keyLen = len(key)
     keyIndex = 0
@@ -64,15 +46,13 @@ def decrypt(ct,key):
     for ctIndex in range(ctLen):
         if(ct[ctIndex]==" "):
             pt+=" "
-            continue   
-        if(keyIndex>=keyLen):
-            buffer = shiftChr(ct[ctIndex],plusKey[keyIndex-keyLen],-1)
-        else:
-            buffer = shiftChr(ct[ctIndex],key[keyIndex],-1)
-        plusKey += buffer
-        pt += buffer
+            continue
+        pt += shiftChr(ct[ctIndex],key[keyIndex],-1)
         keyIndex += 1
+        if(keyIndex >= keyLen):
+            keyIndex = 0
     return pt
+
 
 def test():
     pt = "adnan rafiyansyah majid"
@@ -88,5 +68,5 @@ def main():
     print("Cipher Teks : "+ct)
     print("Deciphered Teks : "+decrypt(ct,key))
 
-test()
-# main()
+# test()
+main()
